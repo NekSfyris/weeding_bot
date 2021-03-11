@@ -1,6 +1,9 @@
 # weeding_bot
 A weeding robot that can autonomously navigate in the field between obstacles, identify different kinds of weeds and then spray at them in a Gazebo simulation environment. Originally a Master's course project from the University of Lincoln.
 
+### System Results
+![alt text](https://github.com/NekSfyris/weeding_bot/blob/main/results/1.gif)
+
 ### Prerequisites
 
 To use this package you need to have: 
