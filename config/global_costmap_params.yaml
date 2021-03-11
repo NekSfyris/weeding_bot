@@ -1,0 +1,15 @@
+global_costmap:
+  global_frame: map
+  robot_base_frame: thorvald_001/base_link
+  update_frequency: 10.0
+  publish_frequency: 5.0
+  #transform_tolerance: 0.5
+
+  # update_frequency: 5.0
+  # publish_frequency: 2.0
+  rolling_window: false
+  static_map: true
+  plugins:  
+    - {name: map_layer, type: "costmap_2d::StaticLayer"}
+    - {name: global_obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+    - {name: global_inflation_layer, type: "costmap_2d::InflationLayer"}

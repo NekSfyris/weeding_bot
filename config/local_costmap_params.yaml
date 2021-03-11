@@ -1,0 +1,27 @@
+local_costmap:
+  global_frame: thorvald_001/odom
+  robot_base_frame: thorvald_001/base_link
+  update_frequency: 10.0
+  publish_frequency: 5.0
+  #transform_tolerance: 0.5
+  width: 8
+  height: 8
+  resolution: 0.04
+
+  # update_frequency: 5.0
+  # publish_frequency: 2.0
+  # width: 10.0
+  # height: 10.0
+  # resolution: 0.04
+  
+  static_map: false
+  rolling_window: true
+
+
+  plugins:
+    - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+    - {name: local_inflation_layer, type: "costmap_2d::InflationLayer"}
+
+
+
+

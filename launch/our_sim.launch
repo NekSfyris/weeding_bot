@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<launch>
+
+
+  <!-- ARGS -->
+
+  <arg name="robot_name" default="thorvald_001"/>
+  <arg name="tf_prefix" default="$(arg robot_name)/"/>
+
+  <arg name="cmd_vel_topic" default="$(arg tf_prefix)nav_vel" />
+  <arg name="odom_topic" default="$(arg tf_prefix)odometry/base_raw" />
+  <arg name="move_forward_only" default="true" />
+
+  <arg name="scan" default="$(arg tf_prefix)scan"/>
+
+  <arg name="obstacles" default="true"/>
+  <arg name="second_robot" default="false"/>
+  <arg name="fake_localisation" default="false"/>
+  <arg name="map_server" default="true"/>
+
+  <arg name="base_frame" default="$(arg tf_prefix)base_link"/>
+  <arg name="odom_frame" default="$(arg tf_prefix)odom"/>
+  <arg name="map_frame" default="map"/>
+
+  <arg name="node_start_delay" default="8.0" /><!-- wait a little before launching system nodes, in seconds -->
+
+  <!-- ####################################################### -->
+
+  <!-- launch our simulation with our robot inside -->
+  <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch">
+    <arg name="obstacles" value="$(arg obstacles)" />
+    <arg name="second_robot" value="$(arg second_robot)" />
+    <arg name="fake_localisation" value="$(arg fake_localisation)" />
+    <arg name="map_server" value="$(arg map_server)" />
+  </include>
+
+
+  <!-- launch the move_base package for our robot -->
+  <include file="$(find weeding_bot)/launch/our_move_base.launch">
+    <arg name="robot_name" value="$(arg robot_name)" />
+    <arg name="cmd_vel_topic" value="$(arg cmd_vel_topic)" />
+    <arg name="odom_topic" value="$(arg odom_topic)" />
+    <arg name="move_forward_only" value="$(arg move_forward_only)" />
+  </include> 
+
+
+
+  <!-- YOU CAN ONLY HAVE AMCL OR GMAPPING! SO ENABLE ONLY ONE OF THEM! -->
+  <!-- Running AMCL -->
+  <include file="$(find weeding_bot)/launch/amcl.launch" >
+  </include>
+
+  <!-- launch Gmapping for our robot 
+  <include file="$(find weeding_bot)/launch/gmapping.launch">
+    <arg name="base_frame" value="$(arg base_frame)" />
+    <arg name="odom_frame" value="$(arg odom_frame)" />
+    <arg name="map_frame" value="$(arg map_frame)" />
+    <arg name="scan" value="$(arg scan)" />
+  </include> -->
+
+
+
+  <!-- launch all our additional nodes 
+  <include file="$(find weeding_bot)/launch/system_nodes.launch" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@'">
+    <arg name="robot_name" value="$(arg robot_name)" />
+  </include> -->
+
+
+  <!-- launch rviz with our file -->
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find weeding_bot)/rviz/thorvald.rviz" />
+
+
+</launch>

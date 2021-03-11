@@ -1,0 +1,50 @@
+<launch>
+
+  <!-- ARGS -->
+
+  <arg name="robot_name" />
+  <arg name="cmd_vel_topic" />
+  <arg name="odom_topic" />
+  <arg name="move_forward_only" default="true" />
+
+
+  <arg name="map_file" default="$(find weeding_bot)maps/cropped.yaml"/>
+  <!-- map server -->
+  <node name="map_server_move_base" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+
+
+  <!-- ####################################################### -->
+
+  <!-- move_base -->
+  <node name="move_base" pkg="move_base" type="move_base" output="screen">
+    
+    <remap from="odom" to="$(arg odom_topic)" />
+    <remap from="cmd_vel" to="$(arg cmd_vel_topic)" />
+
+
+    <!-- TebLocalPlannerROS -->
+    <!--<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />-->
+    <param name="TebLocalPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
+
+    <!-- --><param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
+
+
+    <rosparam file="$(find weeding_bot)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find weeding_bot)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+    <rosparam file="$(find weeding_bot)/config/global_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find weeding_bot)/config/local_costmap_params.yaml" command="load"/>
+
+    <rosparam file="$(find weeding_bot)/config/planners_topo_nav.yaml" command="load"/>
+
+    <!--remap hokuyo frame and topic-->
+    <rosparam param="local_costmap/obstacle_layer/laser_scan_sensor/sensor_frame" subst_value="True">$(arg robot_name)/hokuyo</rosparam>
+    <rosparam param="local_costmap/obstacle_layer/laser_scan_sensor/topic" subst_value="True">$(arg robot_name)/scan</rosparam>
+    <rosparam param="global_costmap/global_obstacle_layer/laser_scan_sensor/sensor_frame" subst_value="True">$(arg robot_name)/hokuyo</rosparam>
+    <rosparam param="global_costmap/global_obstacle_layer/laser_scan_sensor/topic" subst_value="True">$(arg robot_name)/scan</rosparam>
+
+  </node>
+
+
+</launch>
+
